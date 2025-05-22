@@ -35,3 +35,5 @@ class Specialty:
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+
+        print(self.id)

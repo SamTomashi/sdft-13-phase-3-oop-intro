@@ -33,7 +33,7 @@ class Specialty:
             VALUES(?);
         """
 
-        cursor.execute(sql, (self.name,))
+        cursor.execute(sql, [self.name])
         connection.commit()
 
         self.id = cursor.lastrowid
