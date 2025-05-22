@@ -1,9 +1,13 @@
-from __init__ import connection, cursor
-from specialty import Specialty
+from venv import create
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-import ipdb
+from lib.models import Base, Speciality
 
-Specialty.drop_table()
-Specialty.create_table()
+if __name__ == '__main__':
 
-ipdb.set_trace()
+    engine = create_engine('sqlite:///lib/db/clinic_test.db')
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    import ipdb; ipdb.set_trace()
