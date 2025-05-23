@@ -1,5 +1,5 @@
-from sqlalchemy import (Column, Integer, String, create_engine)
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import (Column, Integer, String, create_engine, ForeignKey)
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 Base = declarative_base()
 
@@ -10,8 +10,18 @@ class Specialty(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String())
 
-    def __init__(self, name):
-        self.name = name
+    # This helps access all doctors with a specific specialty
+    doctors = relationship("Doctor", back_populates="specialty")
+
+class Doctor(Base):
+    __tablename__ = "doctors"
+
+    id = Column(Integer(), primary_key=True)
+    name = Column(String())
+    specialty_id = Column(Integer(), ForeignKey('specialties.id'))
+
+    # This gives access to the speciality related object
+    specialty = relationship("Specialty", back_populates="doctors")
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///lib/db/clinic.db')
@@ -20,12 +30,22 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # surgeon = Specialty("Surgeon")
-    # anchologist = Specialty("Anchologist")
+    surgeon = Specialty(name="Surgeon")
+    anchologist = Specialty(name="Anchologist")
+    cardiologist = Specialty(name="Cardiologist")
+    session.bulk_save_objects([surgeon, anchologist, cardiologist])
+    session.commit()
 
-    # session.bulk_save_objects([surgeon, anchologist])
+    kevin = Doctor(name = "Kevin", specialty=cardiologist)
+    mazal = Doctor(name="Mazal", specialty=surgeon)
+    brandon = Doctor(name="Brandon", specialty=surgeon)
+    session.bulk_save_objects([kevin, mazal])
+    session.commit()
 
-    # session.commit()
+    # print(f"{kevin.name} is a {kevin.specialty.name}")
+
+    print([doctor.name for doctor in surgeon.doctors])
+
 
     # print(f"the new specialty id is {surgeon.id}")
 
@@ -33,8 +53,8 @@ if __name__ == '__main__':
     # print([specialty.name for specialty in specialties])
 
 
-    session.query(Specialty).where(Specialty.id == 2).delete()
-    session.commit()
+    # session.query(Specialty).where(Specialty.id == 2).delete()
+    # session.commit()
 
    
 
