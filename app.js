@@ -1,5 +1,0 @@
-const container = ` 
-<div>
-</div>
-
-`

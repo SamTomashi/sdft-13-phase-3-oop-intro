@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
-
 from sqlalchemy import (Column, Integer, String, create_engine)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
 
-class Speciality(Base):
-    __tablename__ = 'specialties'
+class Specialty(Base):
+    # linking a table to the class
+    __tablename__ = "specialties"
 
     id = Column(Integer(), primary_key=True)
     name = Column(String())
@@ -18,24 +17,26 @@ if __name__ == '__main__':
     engine = create_engine('sqlite:///lib/db/clinic.db')
     Base.metadata.create_all(engine)
 
-    # use our engine to configure a 'Session' class
     Session = sessionmaker(bind=engine)
-    # use 'Session' class to create 'session' object
     session = Session()
 
+    # surgeon = Specialty("Surgeon")
+    # anchologist = Specialty("Anchologist")
 
-    # create session, speciality objects
-
-    session.query(Speciality).where(Speciality.id == 1).delete()
-    print([(specialty.name) for specialty in session.query(Speciality)])
-
-
-    # for specialty in session.query(Speciality):
-    #     specialty.name = "Pediatrician"
+    # session.bulk_save_objects([surgeon, anchologist])
 
     # session.commit()
 
-    # print([(specialty.name) for specialty in session.query(Speciality)])
+    # print(f"the new specialty id is {surgeon.id}")
+
+    # specialties = session.query(Specialty).all()
+    # print([specialty.name for specialty in specialties])
+
+
+    session.query(Specialty).where(Specialty.id == 2).delete()
+    session.commit()
+
+   
 
 
 
